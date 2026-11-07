@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DollarsPlay - Slots</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0f0f2a;color:#fff;text-align:center;padding:15px}
+.logo{font-size:28px;font-weight:900;color:#ffd700}
+.coin{font-size:22px;color:#ffd700;font-weight:900;margin:10px}
+.card{background:#1e1e50;margin:15px auto;padding:20px;border-radius:15px;max-width:450px}
+.slots{display:flex;justify-content:center;gap:10px;font-size:55px;margin:20px 0}
+.slot{background:#fff;color:#000;width:90px;height:90px;display:flex;align-items:center;justify-content:center;border-radius:15px}
+.btn{background:#ffd700;color:#000;padding:13px 25px;border:none;border-radius:25px;font-weight:800;cursor:pointer;margin:5px}
+.btn2{background:#00e676;color:#000;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer;margin:5px}
+input{width:90%;padding:11px;border-radius:10px;border:none;margin:8px 0}
+</style>
+</head>
+<body>
+
+<div class="logo">DollarsPlay Slots</div>
+<div class="coin">🪙 Coins: <span id="coins">0</span></div>
+<button class="btn2" onclick="location.href='index.html'">⬅ Back to Home</button>
+
+<!-- GAME 1 -->
+<div class="card">
+<h2>⚡ Dollars Lightning Slot</h2>
+<p>Bet: 20 Coins | Win up to 1000 Coins</p>
+<div class="slots">
+<div class="slot" id="s1">🍒</div>
+<div class="slot" id="s2">🍋</div>
+<div class="slot" id="s3">⭐</div>
+</div>
+<button class="btn" onclick="playSlot('light')">SPIN - 20 Coins</button>
+<p id="r1"></p>
+</div>
+
+<!-- GAME 2 -->
+<div class="card">
+<h2>🎰 Dollars Jackpot Slot</h2>
+<p>Bet: 50 Coins | Jackpot: 5000 Coins</p>
+<div class="slots">
+<div class="slot" id="j1">💎</div>
+<div class="slot" id="j2">💎</div>
+<div class="slot" id="j3">💎</div>
+</div>
+<button class="btn" onclick="playSlot('jackpot')">JACKPOT SPIN - 50 Coins</button>
+<p id="r2"></p>
+<p>Jackpot Pool: <b id="jackpot">5000</b> Coins</p>
+</div>
+
+<div class="card">
+<h3>🎥 Free Coins</h3>
+<p>Ad dekh ke Free Coins lo</p>
+<button class="btn2" onclick="freeCoins()">Watch Ad +30 Coins</button>
+<p id="adResult"></p>
+</div>
+
+<script>
+let coins = parseInt(localStorage.getItem('dp_coins')||'0');
+let jackpot = parseInt(localStorage.getItem('dp_jackpot')||'5000');
+document.getElementById('coins').innerText = coins;
+document.getElementById('jackpot').innerText = jackpot;
+function save(){ localStorage.setItem('dp_coins', coins); localStorage.setItem('dp_jackpot', jackpot); document.getElementById('coins').innerText = coins; document.getElementById('jackpot').innerText = jackpot; }
+
+let symbols = ['🍒','🍋','⭐','💎','7️⃣','🔔','🍇'];
+
+function playSlot(type){
+  let bet = type=='light' ? 20 : 50;
+  if(coins < bet){ alert('Coins kam hain! Home pe ja ke Spin karo ya Ad dekho.'); return; }
+  coins -= bet;
+  if(type=='jackpot') jackpot += bet;
+  save();
+
+  let a = symbols[Math.floor(Math.random()*symbols.length)];
+  let b = symbols[Math.floor(Math.random()*symbols.length)];
+  let c = symbols[Math.floor(Math.random()*symbols.length)];
+
+  if(type=='light'){
+    document.getElementById('s1').innerText=a;
+    document.getElementById('s2').innerText=b;
+    document.getElementById('s3').innerText=c;
+    let win=0;
+    if(a==b && b==c){
+      if(a=='💎') win=1000;
+      else if(a=='7️⃣') win=500;
+      else win=200;
+      coins+=win; save();
+      document.getElementById('r1').innerText='JACKPOT! '+win+' Coins Jeete!';
+    } else if(a==b || b==c || a==c){
+      win=40; coins+=win; save();
+      document.getElementById('r1').innerText='Nice! 2 Match - +40 Coins';
+    } else {
+      document.getElementById('r1').innerText='Koi match nahi, dobara try karo!';
+    }
+  } else {
+    document.getElementById('j1').innerText=a;
+    document.getElementById('j2').innerText=b;
+    document.getElementById('j3').innerText=c;
+    if(a==b && b==c && a=='💎'){
+      let w=jackpot; coins+=w; jackpot=5000; save();
+      document.getElementById('r2').innerText='MEGA JACKPOT! '+w+' Coins Jeete!!';
+    } else if(a==b && b==c){
+      coins+=300; save();
+      document.getElementById('r2').innerText='3 Match! +300 Coins';
+    } else if(a==b || b==c || a==c){
+      coins+=80; save();
+      document.getElementById('r2').innerText='2 Match! +80 Coins';
+    } else {
+      document.getElementById('r2').innerText='Koi match nahi, Jackpot barh gaya!';
+    }
+  }
+}
+
+function freeCoins(){
+  document.getElementById('adResult').innerText='Ad chal raha hai...';
+  setTimeout(()=>{ coins+=30; save(); document.getElementById('adResult').innerText='+30 Coins Mil Gaye!'; },2000);
+}
+</script>
+</body>
+  </html>
