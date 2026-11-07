@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DollarsPlay - Play, Earn, Win</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0f0f2a;color:#fff;text-align:center}
+header{padding:20px;background:#1a1a4a}
+.logo{font-size:32px;font-weight:900;color:#ffd700}
+.logo span{color:#00e676}
+.btn{background:#ffd700;color:#000;padding:12px 22px;border:none;border-radius:25px;font-weight:700;margin:8px;cursor:pointer}
+.btn2{background:#00e676;color:#000;padding:12px 22px;border:none;border-radius:25px;font-weight:700;margin:8px;cursor:pointer}
+.card{background:#1e1e50;margin:15px;padding:20px;border-radius:15px}
+input{width:90%;padding:12px;margin:8px 0;border-radius:10px;border:none;outline:none}
+#wheel{width:200px;height:200px;border-radius:50%;background:conic-gradient(#ffd700 0 60deg,#ff4081 60deg 120deg,#00e676 120deg 180deg,#2196f3 180deg 240deg,#ff9800 240deg 300deg,#9c27b0 300deg 360deg);margin:20px auto;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;transition:transform 3s ease}
+.coin{font-size:28px;color:#ffd700;font-weight:900}
+.hidden{display:none}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
+.game{background:#2a2a6a;padding:20px;border-radius:12px}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">Dollars<span>Play</span></div>
+<p>Play Games • Complete Tasks • Earn Coins</p>
+<div class="coin">🪙 Coins: <span id="coins">0</span></div>
+<p id="userInfo">Welcome Guest</p>
+</header>
+
+<!-- HOME -->
+<div id="homePage">
+<div class="card">
+<h2>Welcome to DollarsPlay</h2>
+<p>Signup karo, Referral Code dalo, Game khelo, Coins jeeto!</p>
+<button class="btn" onclick="showPage('signup')">Create Account</button>
+<button class="btn2" onclick="showPage('login')">Login</button>
+</div>
+
+<div class="card">
+<h3>🎡 Spin & Win</h3>
+<div id="wheel">SPIN</div>
+<button class="btn" onclick="spinWheel()">SPIN NOW - Free</button>
+<p id="spinResult"></p>
+</div>
+
+<div class="card">
+<h3>📅 Daily Check-in</h3>
+<p>Roz aao, Roz Reward pao!</p>
+<button class="btn2" onclick="dailyCheckin()">Claim +50 Coins</button>
+<p id="dailyResult"></p>
+</div>
+
+<div class="card">
+<h3>🎮 Games</h3>
+<div class="games">
+<div class="game">⚡ Dollars Lightning Slot<br><button class="btn" onclick="playGame('Lightning Slot')">Play</button></div>
+<div class="game">🎰 Dollars Jackpot Slot<br><button class="btn" onclick="playGame('Jackpot Slot')">Play</button></div>
+<div class="game">🫧 Bubble Shooter<br><button class="btn" onclick="playGame('Bubble Shooter')">Play</button></div>
+<div class="game">👸 Princess Runner<br><button class="btn" onclick="playGame('Princess Runner')">Play</button></div>
+<div class="game">🏹 Arrow Puzzle<br><button class="btn" onclick="playGame('Arrow Puzzle')">Play</button></div>
+<div class="game">🎥 Watch Video +20<br><button class="btn2" onclick="watchVideo()">Watch</button></div>
+</div>
+</div>
+
+<div class="card">
+<h3>🎁 Gift to Upline</h3>
+<input id="giftAmount" type="number" placeholder="Coins Kitne Bhejne Hain?">
+<button class="btn" onclick="giftCoins()">Gift Bhejo</button>
+<p id="giftResult"></p>
+</div>
+
+<div class="card">
+<h3>💰 Withdraw</h3>
+<p>Min Withdraw: 5000 Coins</p>
+<button class="btn2" onclick="withdraw()">Withdraw Request</button>
+<p id="withdrawResult"></p>
+</div>
+</div>
+
+<!-- SIGNUP -->
+<div id="signupPage" class="hidden">
+<div class="card">
+<h2>Create Account</h2>
+<input id="sName" placeholder="Full Name">
+<input id="sEmail" placeholder="Email">
+<input id="sPass" type="password" placeholder="Password">
+<input id="sRef" placeholder="Referral Code (Optional)">
+<button class="btn" onclick="signup()">Create Account</button>
+<button class="btn2" onclick="showPage('home')">Back</button>
+<p id="signupResult"></p>
+</div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginPage" class="hidden">
+<div class="card">
+<h2>Login</h2>
+<input id="lEmail" placeholder="Email">
+<input id="lPass" type="password" placeholder="Password">
+<button class="btn" onclick="login()">Login</button>
+<button class="btn2" onclick="showPage('home')">Back</button>
+<p id="loginResult"></p>
+</div>
+</div>
+
+<script>
+let coins = parseInt(localStorage.getItem('dp_coins')||'0');
+document.getElementById('coins').innerText = coins;
+let user = localStorage.getItem('dp_user');
+if(user) document.getElementById('userInfo').innerText = 'Welcome ' + user;
+
+function showPage(p){
+  document.getElementById('homePage').classList.add('hidden');
+  document.getElementById('signupPage').classList.add('hidden');
+  document.getElementById('loginPage').classList.add('hidden');
+  if(p=='home') document.getElementById('homePage').classList.remove('hidden');
+  if(p=='signup') document.getElementById('signupPage').classList.remove('hidden');
+  if(p=='login') document.getElementById('loginPage').classList.remove('hidden');
+}
+function saveCoins(){ localStorage.setItem('dp_coins', coins); document.getElementById('coins').innerText = coins; }
+function signup(){
+  let name=document.getElementById('sName').value;
+  let email=document.getElementById('sEmail').value;
+  let ref=document.getElementById('sRef').value;
+  if(!name||!email){ document.getElementById('signupResult').innerText='Name aur Email zaroori hai'; return; }
+  localStorage.setItem('dp_user', name);
+  localStorage.setItem('dp_email', email);
+  localStorage.setItem('dp_ref', ref);
+  coins+=100; saveCoins();
+  document.getElementById('signupResult').innerText='Account Ban Gaya! +100 Bonus Coins Mile. Referral: ' + (ref||'No Code');
+  document.getElementById('userInfo').innerText='Welcome '+name;
+  setTimeout(()=>showPage('home'),1500);
+}
+function login(){
+  let email=document.getElementById('lEmail').value;
+  if(email==localStorage.getItem('dp_email')){ document.getElementById('loginResult').innerText='Login Ho Gaya!'; setTimeout(()=>showPage('home'),1000); }
+  else document.getElementById('loginResult').innerText='Pehle Account Banao';
+}
+function spinWheel(){
+  let rewards=[10,20,50,100,5,200];
+  let win=rewards[Math.floor(Math.random()*rewards.length)];
+  let deg=360*5 + Math.floor(Math.random()*360);
+  document.getElementById('wheel').style.transform='rotate('+deg+'deg)';
+  setTimeout(()=>{ coins+=win; saveCoins(); document.getElementById('spinResult').innerText='Mubarak! Aapne '+win+' Coins Jeete!'; },3000);
+}
+function dailyCheckin(){
+  let today=new Date().toDateString();
+  if(localStorage.getItem('dp_daily')==today){ document.getElementById('dailyResult').innerText='Aaj ka reward le chuke ho, kal aana!'; return; }
+  localStorage.setItem('dp_daily', today); coins+=50; saveCoins();
+  document.getElementById('dailyResult').innerText='+50 Coins Mil Gaye!';
+}
+function watchVideo(){
+  document.getElementById('dailyResult').innerText='Video dekh rahe ho...';
+  setTimeout(()=>{ coins+=20; saveCoins(); alert('Video Complete! +20 Coins'); },2000);
+}
+function playGame(name){ coins+=10; saveCoins(); alert(name+' - Demo Mode! +10 Coins Mile. Full Game Phase 2 me aayega.'); }
+function giftCoins(){
+  let amt=parseInt(document.getElementById('giftAmount').value||'0');
+  if(amt<=0||amt>coins){ document.getElementById('giftResult').innerText='Coins kam hain!'; return; }
+  coins-=amt; saveCoins(); document.getElementById('giftResult').innerText=amt+' Coins Upline ko Gift kar diye!';
+}
+function withdraw(){
+  if(coins<5000){ document.getElementById('withdrawResult').innerText='Withdraw ke liye 5000 Coins chahiye. Abhi: '+coins; return; }
+  document.getElementById('withdrawResult').innerText='Withdraw Request Bhej Di Gayi! Admin check karke dega.';
+}
+</script>
+</body>
+</html>
