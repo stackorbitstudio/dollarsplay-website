@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubble Shooter - DollarsPlay</title>
+<style>
+body{background:#0f0f2a;color:#fff;text-align:center;font-family:Arial;padding:15px}
+.coin{color:#ffd700;font-size:22px;font-weight:900}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:320px;margin:15px auto}
+.bubble{width:48px;height:48px;border-radius:50%;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.btn{background:#ffd700;padding:12px 22px;border:none;border-radius:25px;font-weight:800;cursor:pointer;margin:5px}
+.btn2{background:#00e676;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<h2>🫧 Bubble Shooter</h2>
+<div class="coin">🪙 Coins: <span id="coins">0</span> | Score: <span id="score">0</span></div>
+<p>Same color wale 3 bubbles pe click karo!</p>
+<div class="grid" id="grid"></div>
+<button class="btn" onclick="location.href='index.html'">⬅ Home</button>
+<button class="btn2" onclick="newGame()">New Game</button>
+<p id="msg"></p>
+<script>
+let coins=parseInt(localStorage.getItem('dp_coins')||'0');
+let score=0;
+let colors=['🔴','🟢','🔵','🟡','🟣'];
+document.getElementById('coins').innerText=coins;
+function newGame(){
+  let grid=document.getElementById('grid');
+  grid.innerHTML=''; score=0;
+  document.getElementById('score').innerText=score;
+  for(let i=0;i<24;i++){
+    let d=document.createElement('div');
+    d.className='bubble';
+    d.innerText=colors[Math.floor(Math.random()*colors.length)];
+    d.onclick=()=>{
+      if(d.innerText=='💥') return;
+      d.innerText='💥';
+      score+=10; coins+=5;
+      localStorage.setItem('dp_coins',coins);
+      document.getElementById('score').innerText=score;
+      document.getElementById('coins').innerText=coins;
+      document.getElementById('msg').innerText='Boom! +5 Coins';
+      if(score>=100){ document.getElementById('msg').innerText='Level Complete! +100 Bonus'; coins+=100; localStorage.setItem('dp_coins',coins); document.getElementById('coins').innerText=coins; }
+    };
+    grid.appendChild(d);
+  }
+}
+newGame();
+</script>
+</body>
+</html>
