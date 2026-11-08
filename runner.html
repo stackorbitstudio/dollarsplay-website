@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Princess Runner - DollarsPlay</title>
+<style>
+body{background:#0f0f2a;color:#fff;text-align:center;font-family:Arial;padding:15px}
+.coin{color:#ffd700;font-size:22px;font-weight:900}
+#track{background:#1e1e50;height:150px;border-radius:15px;position:relative;overflow:hidden;margin:15px auto;max-width:400px}
+#player{position:absolute;bottom:10px;left:20px;font-size:45px}
+#block{position:absolute;bottom:10px;right:-40px;font-size:35px}
+.btn{background:#ffd700;padding:13px 25px;border:none;border-radius:25px;font-weight:800;cursor:pointer;margin:5px}
+.btn2{background:#00e676;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<h2>👸 Dollars Princess Runner</h2>
+<div class="coin">🪙 Coins: <span id="coins">0</span> | Score: <span id="score">0</span></div>
+<div id="track"><div id="player">👸</div><div id="block">🪨</div></div>
+<button class="btn" onclick="jump()">JUMP ⬆️</button>
+<button class="btn2" onclick="startGame()">START GAME</button>
+<button class="btn2" onclick="location.href='index.html'">⬅ Home</button>
+<p id="msg">Start dabao, phir Jump se pathar se bacho!</p>
+<script>
+let coins=parseInt(localStorage.getItem('dp_coins')||'0');
+let score=0, playing=false, pos=0, blockX=400;
+document.getElementById('coins').innerText=coins;
+function jump(){
+  if(pos>0) return;
+  let up=setInterval(()=>{
+    pos+=8; document.getElementById('player').style.bottom=(10+pos)+'px';
+    if(pos>=90) clearInterval(up), setTimeout(()=>{ let down=setInterval(()=>{ pos-=8; document.getElementById('player').style.bottom=(10+pos)+'px'; if(pos<=0){clearInterval(down); pos=0;} },20); },150);
+  },20);
+}
+function startGame(){
+  if(playing) return;
+  playing=true; score=0; blockX=400;
+  document.getElementById('msg').innerText='Bhaag rahi hai...';
+  let game=setInterval(()=>{
+    blockX-=6;
+    document.getElementById('block').style.right=(400-blockX)+'px';
+    if(blockX<0){ blockX=400; score+=10; coins+=2; localStorage.setItem('dp_coins',coins); document.getElementById('score').innerText=score; document.getElementById('coins').innerText=coins; }
+    if(blockX<80 && blockX>30 && pos<50){
+      clearInterval(game); playing=false;
+      document.getElementById('msg').innerText='Game Over! Score: '+score+' | Coins: '+coins;
+    }
+  },30);
+}
+</script>
+</body>
+</html>
