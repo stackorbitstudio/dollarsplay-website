@@ -156,7 +156,19 @@ function watchVideo(){
   document.getElementById('dailyResult').innerText='Video dekh rahe ho...';
   setTimeout(()=>{ coins+=20; saveCoins(); alert('Video Complete! +20 Coins'); },2000);
 }
-function playGame(name){ coins+=10; saveCoins(); alert(name+' - Demo Mode! +10 Coins Mile. Full Game Phase 2 me aayega.'); }
+function playGame(name){
+  if(name=='Lightning Slot' || name=='Jackpot Slot'){
+    location.href='slot.html';
+  } else if(name=='Bubble Shooter'){
+    location.href='bubble.html';
+  } else if(name=='Arrow Puzzle'){
+    location.href='puzzle.html';
+  } else if(name=='Princess Runner'){
+    location.href='runner.html';
+  } else {
+    coins+=10; saveCoins(); alert(name+' +10 Coins');
+  }
+}
 function giftCoins(){
   let amt=parseInt(document.getElementById('giftAmount').value||'0');
   if(amt<=0||amt>coins){ document.getElementById('giftResult').innerText='Coins kam hain!'; return; }
