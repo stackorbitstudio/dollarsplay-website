@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arrow Puzzle - DollarsPlay</title>
+<style>
+body{background:#0f0f2a;color:#fff;text-align:center;font-family:Arial;padding:15px}
+.coin{color:#ffd700;font-size:22px;font-weight:900}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px;margin:15px auto}
+.cell{background:#2a2a6a;height:60px;font-size:32px;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer}
+.btn{background:#ffd700;padding:12px 22px;border:none;border-radius:25px;font-weight:800;cursor:pointer}
+.btn2{background:#00e676;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<h2>🏹 Arrow Puzzle</h2>
+<div class="coin">🪙 Coins: <span id="coins">0</span> | Moves: <span id="moves">0</span></div>
+<p>Saare Arrows ko UP ⬆️ ki taraf karo!</p>
+<div class="grid" id="grid"></div>
+<button class="btn" onclick="newGame()">New Puzzle</button>
+<button class="btn2" onclick="location.href='index.html'">⬅ Home</button>
+<p id="msg"></p>
+<script>
+let coins=parseInt(localStorage.getItem('dp_coins')||'0');
+let moves=0;
+let arrows=['⬆️','⬇️','⬅️','➡️'];
+let board=[];
+document.getElementById('coins').innerText=coins;
+function newGame(){
+  moves=0; document.getElementById('moves').innerText=0;
+  document.getElementById('msg').innerText='';
+  board=[];
+  let g=document.getElementById('grid'); g.innerHTML='';
+  for(let i=0;i<16;i++){
+    let a=arrows[Math.floor(Math.random()*4)];
+    // pehla ek ko up kar do taake jeetna mumkin ho
+    if(i==0) a='⬆️';
+    board.push(a);
+    let d=document.createElement('div');
+    d.className='cell'; d.innerText=a;
+    d.onclick=()=>{
+      let idx=arrows.indexOf(board[i]);
+      board[i]=arrows[(idx+1)%4];
+      d.innerText=board[i];
+      moves++; document.getElementById('moves').innerText=moves;
+      checkWin();
+    };
+    g.appendChild(d);
+  }
+}
+function checkWin(){
+  if(board.every(a=>a=='⬆️')){
+    coins+=100; localStorage.setItem('dp_coins',coins);
+    document.getElementById('coins').innerText=coins;
+    document.getElementById('msg').innerText='Jeet Gaye! +100 Coins! Moves: '+moves;
+  }
+}
+newGame();
+</script>
+</body>
+</html>
