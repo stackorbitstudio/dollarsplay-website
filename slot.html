@@ -3,120 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DollarsPlay - Slots</title>
+<title>DollarsPlay - PRO Slots</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#0f0f2a;color:#fff;text-align:center;padding:15px}
-.logo{font-size:28px;font-weight:900;color:#ffd700}
-.coin{font-size:22px;color:#ffd700;font-weight:900;margin:10px}
-.card{background:#1e1e50;margin:15px auto;padding:20px;border-radius:15px;max-width:450px}
-.slots{display:flex;justify-content:center;gap:10px;font-size:55px;margin:20px 0}
-.slot{background:#fff;color:#000;width:90px;height:90px;display:flex;align-items:center;justify-content:center;border-radius:15px}
-.btn{background:#ffd700;color:#000;padding:13px 25px;border:none;border-radius:25px;font-weight:800;cursor:pointer;margin:5px}
-.btn2{background:#00e676;color:#000;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer;margin:5px}
-input{width:90%;padding:11px;border-radius:10px;border:none;margin:8px 0}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Arial Black',Arial}
+body{background:radial-gradient(circle at top,#2b1055,#0f0f2a 70%);color:#fff;text-align:center;min-height:100vh;padding:15px}
+.top{display:flex;justify-content:space-between;align-items:center;max-width:460px;margin:0 auto}
+.logo{font-size:24px;font-weight:900;color:#ffd700;text-shadow:0 0 15px #ffd700}
+.coinBox{background:#1a1a4a;border:2px solid #ffd700;padding:8px 14px;border-radius:20px;color:#ffd700;font-weight:900}
+.back{background:#222;padding:8px 12px;border-radius:15px;color:#fff;border:none;cursor:pointer}
+.jackpotBox{background:linear-gradient(90deg,#ff0000,#ff9800,#ffd700,#ff9800,#ff0000);margin:12px auto;max-width:460px;padding:10px;border-radius:15px;font-size:18px;font-weight:900;animation:glow 1s infinite alternate}
+@keyframes glow{from{box-shadow:0 0 5px #ffd700}to{box-shadow:0 0 25px #ffd700}}
+.machine{background:linear-gradient(180deg,#3a2a00,#1a1a4a);border:4px solid #ffd700;border-radius:25px;padding:15px;max-width:460px;margin:12px auto;box-shadow:0 0 30px #ffd70055}
+.lights{display:flex;justify-content:space-between;padding:0 10px;font-size:18px;animation:blink 0.8s infinite alternate}
+@keyframes blink{from{opacity:0.3}to{opacity:1}}
+.reels{display:flex;gap:10px;justify-content:center;margin:15px 0}
+.reel{background:#fff;width:110px;height:120px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:58px;color:#000;box-shadow:inset 0 -10px 20px #00000033;border:3px solid #ddd;overflow:hidden}
+.reel.spin{animation:shake 0.12s infinite}
+@keyframes shake{0%{transform:translateY(-3px)}100%{transform:translateY(3px)}}
+.pay{font-size:13px;color:#ffeb3b;line-height:1.6;background:#00000040;padding:8px;border-radius:10px;margin:10px 0}
+.btn{width:100%;padding:15px;border:none;border-radius:30px;font-size:19px;font-weight:900;cursor:pointer;margin-top:8px;color:#000;background:linear-gradient(90deg,#ffd700,#ff9800);box-shadow:0 5px 0 #a66a00}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn2{width:100%;padding:12px;border:none;border-radius:30px;font-weight:800;cursor:pointer;margin-top:8px;background:#00e676}
+.winMsg{font-size:20px;font-weight:900;color:#00ff88;min-height:28px;margin-top:10px;text-shadow:0 0 10px #00ff88}
+.bigWin{color:#ffd700;font-size:28px;animation:glow 0.5s infinite alternate}
+.tabs{display:flex;gap:10px;max-width:460px;margin:0 auto}
+.tab{flex:1;padding:12px;border-radius:15px;border:2px solid #ffd700;background:#1a1a4a;color:#fff;font-weight:900;cursor:pointer}
+.tab.active{background:#ffd700;color:#000}
 </style>
 </head>
 <body>
 
-<div class="logo">DollarsPlay Slots</div>
-<div class="coin">🪙 Coins: <span id="coins">0</span></div>
-<button class="btn2" onclick="location.href='index.html'">⬅ Back to Home</button>
-
-<!-- GAME 1 -->
-<div class="card">
-<h2>⚡ Dollars Lightning Slot</h2>
-<p>Bet: 20 Coins | Win up to 1000 Coins</p>
-<div class="slots">
-<div class="slot" id="s1">🍒</div>
-<div class="slot" id="s2">🍋</div>
-<div class="slot" id="s3">⭐</div>
-</div>
-<button class="btn" onclick="playSlot('light')">SPIN - 20 Coins</button>
-<p id="r1"></p>
+<div class="top">
+<button class="back" onclick="location.href='index.html'">⬅ Home</button>
+<div class="logo">DollarsPlay</div>
+<div class="coinBox">🪙 <span id="coins">0</span></div>
 </div>
 
-<!-- GAME 2 -->
-<div class="card">
-<h2>🎰 Dollars Jackpot Slot</h2>
-<p>Bet: 50 Coins | Jackpot: 5000 Coins</p>
-<div class="slots">
-<div class="slot" id="j1">💎</div>
-<div class="slot" id="j2">💎</div>
-<div class="slot" id="j3">💎</div>
-</div>
-<button class="btn" onclick="playSlot('jackpot')">JACKPOT SPIN - 50 Coins</button>
-<p id="r2"></p>
-<p>Jackpot Pool: <b id="jackpot">5000</b> Coins</p>
+<div class="jackpotBox">🏆 MEGA JACKPOT: <span id="jackpot">5000</span> COINS 🏆</div>
+
+<div class="tabs">
+<button class="tab active" id="tabLight" onclick="switchGame('light')">⚡ LIGHTNING</button>
+<button class="tab" id="tabJack" onclick="switchGame('jackpot')">🎰 JACKPOT</button>
 </div>
 
-<div class="card">
-<h3>🎥 Free Coins</h3>
-<p>Ad dekh ke Free Coins lo</p>
-<button class="btn2" onclick="freeCoins()">Watch Ad +30 Coins</button>
-<p id="adResult"></p>
+<div class="machine">
+<div class="lights"><span>●</span><span>●</span><span>●</span><span>●</span><span>●</span><span>●</span><span>●</span></div>
+<h2 id="gameTitle" style="margin-top:10px">⚡ LIGHTNING SLOT</h2>
+<p id="betText" style="color:#ccc;font-size:13px">Bet 20 Coins | Win up to 1000</p>
+
+<div class="reels">
+<div class="reel" id="r1">💎</div>
+<div class="reel" id="r2">7️⃣</div>
+<div class="reel" id="r3">⭐</div>
 </div>
+
+<div class="pay" id="payTable">
+💎💎💎 = 1000 Coins &nbsp; | &nbsp; 7️⃣7️⃣7️⃣ = 500<br>
+Koi bhi 3 Same = 200 &nbsp; | &nbsp; 2 Same = 40
+</div>
+
+<div class="winMsg" id="winMsg">Good Luck Malik!</div>
+<button class="btn" id="spinBtn" onclick="spin()">🎰 SPIN NOW</button>
+<button class="btn2" onclick="freeCoins()">🎥 Watch Ad +30 Free Coins</button>
+</div>
+
+<p style="font-size:12px;color:#aaa;margin-top:10px">Free Coins Game - No Real Money</p>
 
 <script>
 let coins = parseInt(localStorage.getItem('dp_coins')||'0');
 let jackpot = parseInt(localStorage.getItem('dp_jackpot')||'5000');
-document.getElementById('coins').innerText = coins;
-document.getElementById('jackpot').innerText = jackpot;
-function save(){ localStorage.setItem('dp_coins', coins); localStorage.setItem('dp_jackpot', jackpot); document.getElementById('coins').innerText = coins; document.getElementById('jackpot').innerText = jackpot; }
+let mode = 'light';
+let spinning = false;
+let symbols = ['🍒','🍋','⭐','💎','7️⃣','🔔','🍇','💰'];
+function update(){ document.getElementById('coins').innerText=coins; document.getElementById('jackpot').innerText=jackpot; localStorage.setItem('dp_coins',coins); localStorage.setItem('dp_jackpot',jackpot); }
+update();
 
-let symbols = ['🍒','🍋','⭐','💎','7️⃣','🔔','🍇'];
+function switchGame(m){
+  mode=m;
+  document.getElementById('tabLight').classList.toggle('active', m=='light');
+  document.getElementById('tabJack').classList.toggle('active', m=='jackpot');
+  document.getElementById('gameTitle').innerText = m=='light' ? '⚡ LIGHTNING SLOT' : '🎰 JACKPOT SLOT';
+  document.getElementById('betText').innerText = m=='light' ? 'Bet 20 Coins | Win up to 1000' : 'Bet 50 Coins | Win Full Jackpot Pool';
+  document.getElementById('payTable').innerHTML = m=='light' ? '💎💎💎 = 1000 Coins &nbsp; | &nbsp; 7️⃣7️⃣7️⃣ = 500<br>Koi bhi 3 Same = 200 &nbsp; | &nbsp; 2 Same = 40' : '💎💎💎 = FULL JACKPOT<br>Koi bhi 3 Same = 300 &nbsp; | &nbsp; 2 Same = 80';
+  document.getElementById('winMsg').innerText='Good Luck Malik!';
+  document.getElementById('winMsg').classList.remove('bigWin');
+}
 
-function playSlot(type){
-  let bet = type=='light' ? 20 : 50;
-  if(coins < bet){ alert('Coins kam hain! Home pe ja ke Spin karo ya Ad dekho.'); return; }
-  coins -= bet;
-  if(type=='jackpot') jackpot += bet;
-  save();
-
-  let a = symbols[Math.floor(Math.random()*symbols.length)];
-  let b = symbols[Math.floor(Math.random()*symbols.length)];
-  let c = symbols[Math.floor(Math.random()*symbols.length)];
-
-  if(type=='light'){
-    document.getElementById('s1').innerText=a;
-    document.getElementById('s2').innerText=b;
-    document.getElementById('s3').innerText=c;
-    let win=0;
+function spin(){
+  if(spinning) return;
+  let bet = mode=='light' ? 20 : 50;
+  if(coins < bet){ document.getElementById('winMsg').innerText='Coins khatam! Ad dekh ke Free Coins lo.'; return; }
+  coins -= bet; if(mode=='jackpot') jackpot += bet; update();
+  spinning=true;
+  document.getElementById('spinBtn').innerText='SPINNING...';
+  document.getElementById('winMsg').innerText='';
+  let r1=document.getElementById('r1'), r2=document.getElementById('r2'), r3=document.getElementById('r3');
+  r1.classList.add('spin'); r2.classList.add('spin'); r3.classList.add('spin');
+  let t=setInterval(()=>{ r1.innerText=symbols[Math.floor(Math.random()*symbols.length)]; r2.innerText=symbols[Math.floor(Math.random()*symbols.length)]; r3.innerText=symbols[Math.floor(Math.random()*symbols.length)]; },100);
+  setTimeout(()=>{ r1.classList.remove('spin'); },800);
+  setTimeout(()=>{ r2.classList.remove('spin'); },1400);
+  setTimeout(()=>{
+    clearInterval(t); r3.classList.remove('spin'); spinning=false;
+    document.getElementById('spinBtn').innerText='🎰 SPIN NOW';
+    let a=r1.innerText, b=r2.innerText, c=r3.innerText;
+    let msg=document.getElementById('winMsg');
     if(a==b && b==c){
-      if(a=='💎') win=1000;
-      else if(a=='7️⃣') win=500;
-      else win=200;
-      coins+=win; save();
-      document.getElementById('r1').innerText='JACKPOT! '+win+' Coins Jeete!';
-    } else if(a==b || b==c || a==c){
-      win=40; coins+=win; save();
-      document.getElementById('r1').innerText='Nice! 2 Match - +40 Coins';
-    } else {
-      document.getElementById('r1').innerText='Koi match nahi, dobara try karo!';
-    }
-  } else {
-    document.getElementById('j1').innerText=a;
-    document.getElementById('j2').innerText=b;
-    document.getElementById('j3').innerText=c;
-    if(a==b && b==c && a=='💎'){
-      let w=jackpot; coins+=w; jackpot=5000; save();
-      document.getElementById('r2').innerText='MEGA JACKPOT! '+w+' Coins Jeete!!';
-    } else if(a==b && b==c){
-      coins+=300; save();
-      document.getElementById('r2').innerText='3 Match! +300 Coins';
-    } else if(a==b || b==c || a==c){
-      coins+=80; save();
-      document.getElementById('r2').innerText='2 Match! +80 Coins';
-    } else {
-      document.getElementById('r2').innerText='Koi match nahi, Jackpot barh gaya!';
-    }
-  }
+      if(a=='💎' && mode=='jackpot'){ let w=jackpot; coins+=w; jackpot=5000; msg.innerText='🎉 MEGA JACKPOT! +'+w+' COINS!'; msg.classList.add('bigWin'); }
+      else if(a=='💎'){ coins+=1000; msg.innerText='💎 JACKPOT! +1000 Coins!'; msg.classList.add('bigWin'); }
+      else if(a=='7️⃣'){ coins+=500; msg.innerText='7️⃣ SUPER WIN! +500 Coins!'; msg.classList.add('bigWin'); }
+      else { let w = mode=='light'?200:300; coins+=w; msg.innerText='🎉 3 MATCH! +'+w+' Coins!'; }
+    } else if(a==b || b==c || a==c){ let w=mode=='light'?40:80; coins+=w; msg.innerText='Nice! 2 Match +'+w+' Coins'; msg.classList.remove('bigWin'); }
+    else { msg.innerText='Koi match nahi, dobara try karo!'; msg.classList.remove('bigWin'); }
+    update();
+  },2000);
 }
 
 function freeCoins(){
-  document.getElementById('adResult').innerText='Ad chal raha hai...';
-  setTimeout(()=>{ coins+=30; save(); document.getElementById('adResult').innerText='+30 Coins Mil Gaye!'; },2000);
+  document.getElementById('winMsg').innerText='Ad chal raha hai... 2 sec';
+  setTimeout(()=>{ coins+=30; update(); document.getElementById('winMsg').innerText='+30 Free Coins Mil Gaye!'; },2000);
 }
 </script>
 </body>
-  </html>
+</html>
