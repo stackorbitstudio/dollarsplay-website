@@ -3,47 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Princess Runner - DollarsPlay</title>
+<title>Princess Runner PRO</title>
 <style>
-body{background:#0f0f2a;color:#fff;text-align:center;font-family:Arial;padding:15px}
-.coin{color:#ffd700;font-size:22px;font-weight:900}
-#track{background:#1e1e50;height:150px;border-radius:15px;position:relative;overflow:hidden;margin:15px auto;max-width:400px}
-#player{position:absolute;bottom:10px;left:20px;font-size:45px}
-#block{position:absolute;bottom:10px;right:-40px;font-size:35px}
-.btn{background:#ffd700;padding:13px 25px;border:none;border-radius:25px;font-weight:800;cursor:pointer;margin:5px}
-.btn2{background:#00e676;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:linear-gradient(180deg,#0f0f2a,#4a0a4a);color:#fff;text-align:center;padding:12px}
+.top{display:flex;justify-content:space-between;max-width:420px;margin:0 auto;align-items:center}
+.logo{font-size:18px;font-weight:900;color:#ffd700}
+.coin{background:#1a1a4a;border:2px solid #ffd700;padding:6px 12px;border-radius:20px;color:#ffd700;font-weight:900}
+.back{background:#222;padding:7px 12px;border-radius:15px;color:#fff;border:none}
+.stats{display:flex;gap:8px;max-width:420px;margin:10px auto}
+.box{flex:1;background:#1e1e50;padding:10px;border-radius:12px}
+.box b{color:#ffd700;font-size:18px}
+#track{background:linear-gradient(180deg,#87ceeb 0%,#87ceeb 60%,#5cb85c 60%,#3a8a3a 100%);height:180px;border-radius:20px;position:relative;overflow:hidden;max-width:420px;margin:0 auto;border:3px solid #ffd700}
+#ground{position:absolute;bottom:0;width:100%;height:25px;background:#8b4513}
+#player{position:absolute;bottom:25px;left:25px;font-size:48px;transition:bottom 0.1s;z-index:2}
+#block{position:absolute;bottom:25px;font-size:38px;right:-50px}
+#coinObj{position:absolute;bottom:80px;font-size:28px;right:-30px}
+.cloud{position:absolute;top:10px;font-size:30px;animation:cloud 6s linear infinite}
+@keyframes cloud{from{left:100%}to{left:-20%}}
+.msg{font-weight:900;color:#00ff88;min-height:26px;margin:10px;font-size:17px}
+.btn{padding:14px 22px;border:none;border-radius:25px;font-weight:900;cursor:pointer;margin:5px;font-size:16px}
+.gold{background:linear-gradient(90deg,#ffd700,#ff9800)}
+.green{background:#00e676}
+.jumpBtn{width:90%;max-width:420px;padding:18px;font-size:22px}
 </style>
 </head>
 <body>
-<h2>👸 Dollars Princess Runner</h2>
-<div class="coin">🪙 Coins: <span id="coins">0</span> | Score: <span id="score">0</span></div>
-<div id="track"><div id="player">👸</div><div id="block">🪨</div></div>
-<button class="btn" onclick="jump()">JUMP ⬆️</button>
-<button class="btn2" onclick="startGame()">START GAME</button>
-<button class="btn2" onclick="location.href='index.html'">⬅ Home</button>
-<p id="msg">Start dabao, phir Jump se pathar se bacho!</p>
+<div class="top">
+<button class="back" onclick="location.href='index.html'">⬅ Home</button>
+<div class="logo">👸 PRINCESS RUNNER</div>
+<div class="coin">🪙 <span id="coins">0</span></div>
+</div>
+<div class="stats">
+<div class="box">Score<br><b id="score">0</b></div>
+<div class="box">Best<br><b id="best">0</b></div>
+<div class="box">Coins Won<br><b id="won">0</b></div>
+</div>
+<div id="track">
+<div class="cloud">☁️</div>
+<div id="player">👸</div>
+<div id="block">🪨</div>
+<div id="coinObj">🪙</div>
+<div id="ground"></div>
+</div>
+<div class="msg" id="msg">START dabao, phir JUMP se bacho!</div>
+<button class="btn green" onclick="startGame()">▶ START GAME</button>
+<button class="btn gold jumpBtn" onclick="jump()">⬆️ JUMP</button>
+<br><button class="btn" style="background:#222;color:#fff" onclick="location.href='index.html'">🏠 Home</button>
 <script>
 let coins=parseInt(localStorage.getItem('dp_coins')||'0');
-let score=0, playing=false, pos=0, blockX=400;
+let score=0, won=0, playing=false, pos=0, blockX=450, coinX=300;
+let best=parseInt(localStorage.getItem('dp_runner_best')||'0');
+document.getElementById('best').innerText=best;
 document.getElementById('coins').innerText=coins;
+function update(){ document.getElementById('score').innerText=score; document.getElementById('coins').innerText=coins; document.getElementById('won').innerText=won; localStorage.setItem('dp_coins',coins); }
 function jump(){
-  if(pos>0) return;
+  if(pos>0 || !playing) return;
   let up=setInterval(()=>{
-    pos+=8; document.getElementById('player').style.bottom=(10+pos)+'px';
-    if(pos>=90) clearInterval(up), setTimeout(()=>{ let down=setInterval(()=>{ pos-=8; document.getElementById('player').style.bottom=(10+pos)+'px'; if(pos<=0){clearInterval(down); pos=0;} },20); },150);
+    pos+=12; document.getElementById('player').style.bottom=(25+pos)+'px';
+    if(pos>=100){ clearInterval(up); setTimeout(()=>{ let down=setInterval(()=>{ pos-=12; if(pos<=0){pos=0;clearInterval(down);} document.getElementById('player').style.bottom=(25+pos)+'px'; },20); },120); }
   },20);
 }
 function startGame(){
   if(playing) return;
-  playing=true; score=0; blockX=400;
-  document.getElementById('msg').innerText='Bhaag rahi hai...';
+  playing=true; score=0; won=0; blockX=450; coinX=300; update();
+  document.getElementById('msg').innerText='Bhaag rahi hai... JUMP dabate raho!';
   let game=setInterval(()=>{
-    blockX-=6;
-    document.getElementById('block').style.right=(400-blockX)+'px';
-    if(blockX<0){ blockX=400; score+=10; coins+=2; localStorage.setItem('dp_coins',coins); document.getElementById('score').innerText=score; document.getElementById('coins').innerText=coins; }
-    if(blockX<80 && blockX>30 && pos<50){
+    blockX-=7; coinX-=7;
+    document.getElementById('block').style.right=(450-blockX)+'px';
+    document.getElementById('coinObj').style.right=(450-coinX)+'px';
+    if(blockX<0){ blockX=450+Math.random()*200; score+=10; coins+=2; won+=2; update(); }
+    if(coinX<0){ coinX=450+Math.random()*300; }
+    // coin collect
+    if(coinX<90 && coinX>40 && pos>40){ coins+=10; won+=10; coinX=450+Math.random()*300; document.getElementById('msg').innerText='🪙 Coin Mila! +10'; update(); }
+    // takrao
+    if(blockX<85 && blockX>25 && pos<45){
       clearInterval(game); playing=false;
-      document.getElementById('msg').innerText='Game Over! Score: '+score+' | Coins: '+coins;
+      if(score>best){ best=score; localStorage.setItem('dp_runner_best',best); document.getElementById('best').innerText=best; }
+      document.getElementById('msg').innerText='💥 Game Over! Score: '+score+' | Won: '+won+' Coins';
     }
   },30);
 }
