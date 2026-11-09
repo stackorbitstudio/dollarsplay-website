@@ -3,48 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bubble Shooter - DollarsPlay</title>
+<title>Bubble Shooter PRO - DollarsPlay</title>
 <style>
-body{background:#0f0f2a;color:#fff;text-align:center;font-family:Arial;padding:15px}
-.coin{color:#ffd700;font-size:22px;font-weight:900}
-.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:320px;margin:15px auto}
-.bubble{width:48px;height:48px;border-radius:50%;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.btn{background:#ffd700;padding:12px 22px;border:none;border-radius:25px;font-weight:800;cursor:pointer;margin:5px}
-.btn2{background:#00e676;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:linear-gradient(180deg,#0f0f2a,#1a0533);color:#fff;text-align:center;padding:12px;min-height:100vh}
+.top{display:flex;justify-content:space-between;align-items:center;max-width:420px;margin:0 auto}
+.logo{font-size:20px;font-weight:900;color:#ffd700}
+.coin{background:#1a1a4a;border:2px solid #ffd700;padding:6px 12px;border-radius:20px;color:#ffd700;font-weight:900}
+.back{background:#222;padding:7px 12px;border-radius:15px;color:#fff;border:none}
+.scoreBar{display:flex;gap:8px;max-width:420px;margin:12px auto}
+.box{flex:1;background:#1e1e50;padding:10px;border-radius:12px;border:1px solid #333}
+.box b{color:#ffd700;font-size:18px}
+.board{background:linear-gradient(180deg,#1a1a6a,#0f0f2a);border:3px solid #ffd700;border-radius:20px;padding:12px;max-width:420px;margin:0 auto;box-shadow:0 0 20px #ffd70033}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.bubble{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:transform 0.15s;box-shadow:inset -5px -5px 10px #00000055, 0 3px 8px #00000055;border:2px solid #ffffff33}
+.bubble:active{transform:scale(0.85)}
+.bubble.pop{animation:pop 0.3s forwards}
+@keyframes pop{to{transform:scale(1.4);opacity:0}}
+.msg{font-weight:900;color:#00ff88;min-height:26px;margin:10px;font-size:18px}
+.btn{padding:13px 20px;border:none;border-radius:25px;font-weight:900;cursor:pointer;margin:5px}
+.btn-gold{background:linear-gradient(90deg,#ffd700,#ff9800)}
+.btn-green{background:#00e676}
+.target{font-size:13px;color:#ccc}
+.progress{height:10px;background:#333;border-radius:10px;overflow:hidden;max-width:420px;margin:8px auto}
+#bar{height:100%;background:linear-gradient(90deg,#00e676,#ffd700);width:0%;transition:width 0.3s}
 </style>
 </head>
 <body>
-<h2>🫧 Bubble Shooter</h2>
-<div class="coin">🪙 Coins: <span id="coins">0</span> | Score: <span id="score">0</span></div>
-<p>Same color wale 3 bubbles pe click karo!</p>
+
+<div class="top">
+<button class="back" onclick="location.href='index.html'">⬅ Home</button>
+<div class="logo">🫧 BUBBLE SHOOTER</div>
+<div class="coin">🪙 <span id="coins">0</span></div>
+</div>
+
+<div class="scoreBar">
+<div class="box">Score<br><b id="score">0</b></div>
+<div class="box">Level<br><b id="level">1</b></div>
+<div class="box">Target<br><b id="target">100</b></div>
+</div>
+
+<div class="progress"><div id="bar"></div></div>
+<p class="target">Same color wale bubble pe tap karo - 3 ek sath phoro to BONUS!</p>
+
+<div class="board">
 <div class="grid" id="grid"></div>
-<button class="btn" onclick="location.href='index.html'">⬅ Home</button>
-<button class="btn2" onclick="newGame()">New Game</button>
-<p id="msg"></p>
+</div>
+
+<div class="msg" id="msg">Chalo Malik, shuru karo!</div>
+<button class="btn btn-gold" onclick="newGame()">🔄 New Game</button>
+<button class="btn btn-green" onclick="location.href='index.html'">🏠 Home</button>
+
 <script>
-let coins=parseInt(localStorage.getItem('dp_coins')||'0');
-let score=0;
-let colors=['🔴','🟢','🔵','🟡','🟣'];
-document.getElementById('coins').innerText=coins;
-function newGame(){
-  let grid=document.getElementById('grid');
-  grid.innerHTML=''; score=0;
+let coins = parseInt(localStorage.getItem('dp_coins')||'0');
+let score=0, level=1, target=100;
+let colors=[
+  {c:'#ff3b3b', e:'🔴'},
+  {c:'#00e676', e:'🟢'},
+  {c:'#2196f3', e:'🔵'},
+  {c:'#ffd700', e:'🟡'},
+  {c:'#e040fb', e:'🟣'},
+  {c:'#ff9800', e:'🟠'}
+];
+function update(){
+  document.getElementById('coins').innerText=coins;
   document.getElementById('score').innerText=score;
-  for(let i=0;i<24;i++){
+  document.getElementById('level').innerText=level;
+  document.getElementById('target').innerText=target;
+  document.getElementById('bar').style.width=Math.min(100, score/target*100)+'%';
+  localStorage.setItem('dp_coins', coins);
+}
+function newGame(){
+  score=0; level=1; target=100;
+  document.getElementById('msg').innerText='Level 1 - Target 100';
+  build();
+  update();
+}
+function build(){
+  let grid=document.getElementById('grid');
+  grid.innerHTML='';
+  for(let i=0;i<30;i++){
+    let col = colors[Math.floor(Math.random()*colors.length)];
     let d=document.createElement('div');
     d.className='bubble';
-    d.innerText=colors[Math.floor(Math.random()*colors.length)];
-    d.onclick=()=>{
-      if(d.innerText=='💥') return;
-      d.innerText='💥';
-      score+=10; coins+=5;
-      localStorage.setItem('dp_coins',coins);
-      document.getElementById('score').innerText=score;
-      document.getElementById('coins').innerText=coins;
-      document.getElementById('msg').innerText='Boom! +5 Coins';
-      if(score>=100){ document.getElementById('msg').innerText='Level Complete! +100 Bonus'; coins+=100; localStorage.setItem('dp_coins',coins); document.getElementById('coins').innerText=coins; }
+    d.style.background = 'radial-gradient(circle at 30% 30%, #ffffffaa, '+col.c+' 60%)';
+    d.innerText = col.e;
+    d.dataset.color = col.c;
+    d.onclick = () => {
+      if(d.classList.contains('pop')) return;
+      // paas wale same color dhoondo
+      let all=[...grid.children];
+      let same = all.filter(x=>x.dataset.color==d.dataset.color && !x.classList.contains('pop'));
+      if(same.length>=3){
+        // 3 ya zyada hain to sab phor do
+        same.slice(0,3).forEach(el=>{ el.classList.add('pop'); });
+        let bonus = same.length>=5 ? 50 : 25;
+        score+=30+bonus; coins+=15;
+        document.getElementById('msg').innerText='💥 COMBO! +15 Coins + '+bonus+' Bonus!';
+      } else {
+        d.classList.add('pop');
+        score+=10; coins+=5;
+        document.getElementById('msg').innerText='Pop! +5 Coins';
+      }
+      update();
+      setTimeout(()=>{ d.remove(); refill(); checkLevel(); },300);
     };
     grid.appendChild(d);
+  }
+}
+function refill(){
+  let grid=document.getElementById('grid');
+  while(grid.children.length<30){
+    let col=colors[Math.floor(Math.random()*colors.length)];
+    let d=document.createElement('div');
+    d.className='bubble';
+    d.style.background='radial-gradient(circle at 30% 30%, #ffffffaa, '+col.c+' 60%)';
+    d.innerText=col.e; d.dataset.color=col.c;
+    d.onclick=()=>{
+      if(d.classList.contains('pop')) return;
+      d.classList.add('pop'); score+=10; coins+=5; update();
+      setTimeout(()=>{ d.remove(); refill(); checkLevel(); },300);
+    };
+    grid.appendChild(d);
+  }
+}
+function checkLevel(){
+  if(score>=target){
+    coins+=100; level++; target+=100;
+    document.getElementById('msg').innerText='🎉 Level Complete! +100 Bonus! Level '+level;
+    update();
   }
 }
 newGame();
