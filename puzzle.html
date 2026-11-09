@@ -3,57 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arrow Puzzle - DollarsPlay</title>
+<title>Arrow Puzzle PRO</title>
 <style>
-body{background:#0f0f2a;color:#fff;text-align:center;font-family:Arial;padding:15px}
-.coin{color:#ffd700;font-size:22px;font-weight:900}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px;margin:15px auto}
-.cell{background:#2a2a6a;height:60px;font-size:32px;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer}
-.btn{background:#ffd700;padding:12px 22px;border:none;border-radius:25px;font-weight:800;cursor:pointer}
-.btn2{background:#00e676;padding:12px 20px;border:none;border-radius:25px;font-weight:700;cursor:pointer}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:linear-gradient(180deg,#0f0f2a,#2a0a4a);color:#fff;text-align:center;padding:12px;min-height:100vh}
+.top{display:flex;justify-content:space-between;max-width:400px;margin:0 auto;align-items:center}
+.logo{font-size:19px;font-weight:900;color:#ffd700}
+.coin{background:#1a1a4a;border:2px solid #ffd700;padding:6px 12px;border-radius:20px;color:#ffd700;font-weight:900}
+.back{background:#222;padding:7px 12px;border-radius:15px;color:#fff;border:none}
+.board{background:#1e1e50;border:3px solid #ffd700;border-radius:20px;padding:12px;max-width:400px;margin:12px auto}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cell{aspect-ratio:1;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;transition:0.2s;border:2px solid #ffffff22}
+.cell:active{transform:scale(0.9)}
+.cell.up{background:#00e676 !important;color:#000;box-shadow:0 0 15px #00e676}
+.msg{font-weight:900;color:#00ff88;min-height:26px;margin:10px;font-size:18px}
+.btn{padding:12px 20px;border:none;border-radius:25px;font-weight:900;cursor:pointer;margin:5px}
+.gold{background:linear-gradient(90deg,#ffd700,#ff9800)}
+.green{background:#00e676}
+.info{font-size:13px;color:#ccc}
+.progress{height:10px;background:#333;border-radius:10px;max-width:400px;margin:8px auto;overflow:hidden}
+#bar{height:100%;background:#00e676;width:0%;transition:0.3s}
 </style>
 </head>
 <body>
-<h2>🏹 Arrow Puzzle</h2>
-<div class="coin">🪙 Coins: <span id="coins">0</span> | Moves: <span id="moves">0</span></div>
-<p>Saare Arrows ko UP ⬆️ ki taraf karo!</p>
-<div class="grid" id="grid"></div>
-<button class="btn" onclick="newGame()">New Puzzle</button>
-<button class="btn2" onclick="location.href='index.html'">⬅ Home</button>
-<p id="msg"></p>
+<div class="top">
+<button class="back" onclick="location.href='index.html'">⬅ Home</button>
+<div class="logo">🏹 ARROW PUZZLE</div>
+<div class="coin">🪙 <span id="coins">0</span></div>
+</div>
+<p class="info" style="margin-top:10px">Saare arrows ko UP ⬆️ karo. Tap karne pe arrow ghoomega.</p>
+<div class="progress"><div id="bar"></div></div>
+<p>Moves: <b id="moves">0</b> | Best: <b id="best">-</b></p>
+<div class="board"><div class="grid" id="grid"></div></div>
+<div class="msg" id="msg">Chalo, puzzle solve karo!</div>
+<button class="btn gold" onclick="newGame()">🔄 New Puzzle</button>
+<button class="btn green" onclick="location.href='index.html'">🏠 Home</button>
 <script>
 let coins=parseInt(localStorage.getItem('dp_coins')||'0');
-let moves=0;
-let arrows=['⬆️','⬇️','⬅️','➡️'];
-let board=[];
-document.getElementById('coins').innerText=coins;
+let board=[], moves=0;
+let arrows=['⬆️','➡️','⬇️','⬅️'];
+let colors={'⬆️':'#00e676','➡️':'#2196f3','⬇️':'#ff3b3b','⬅️':'#ffd700'};
+let best=localStorage.getItem('dp_puzzle_best')||'-';
+document.getElementById('best').innerText=best;
+function update(){
+  document.getElementById('coins').innerText=coins;
+  document.getElementById('moves').innerText=moves;
+  let up=board.filter(a=>a=='⬆️').length;
+  document.getElementById('bar').style.width=(up/16*100)+'%';
+  localStorage.setItem('dp_coins',coins);
+}
 function newGame(){
-  moves=0; document.getElementById('moves').innerText=0;
-  document.getElementById('msg').innerText='';
-  board=[];
+  moves=0; board=[]; document.getElementById('msg').innerText='Naya Puzzle!';
   let g=document.getElementById('grid'); g.innerHTML='';
   for(let i=0;i<16;i++){
     let a=arrows[Math.floor(Math.random()*4)];
-    // pehla ek ko up kar do taake jeetna mumkin ho
-    if(i==0) a='⬆️';
+    if(i<4) a='⬆️';
     board.push(a);
     let d=document.createElement('div');
     d.className='cell'; d.innerText=a;
+    d.style.background=colors[a];
+    if(a=='⬆️') d.classList.add('up');
     d.onclick=()=>{
       let idx=arrows.indexOf(board[i]);
       board[i]=arrows[(idx+1)%4];
-      d.innerText=board[i];
-      moves++; document.getElementById('moves').innerText=moves;
-      checkWin();
+      d.innerText=board[i]; d.style.background=colors[board[i]];
+      d.classList.toggle('up', board[i]=='⬆️');
+      moves++; update(); checkWin();
     };
     g.appendChild(d);
   }
+  update();
 }
 function checkWin(){
   if(board.every(a=>a=='⬆️')){
-    coins+=100; localStorage.setItem('dp_coins',coins);
-    document.getElementById('coins').innerText=coins;
-    document.getElementById('msg').innerText='Jeet Gaye! +100 Coins! Moves: '+moves;
+    let bonus = moves<=20 ? 150 : 100;
+    coins+=bonus; update();
+    document.getElementById('msg').innerText='🎉 JEET GAYE! +'+bonus+' Coins! Moves: '+moves;
+    if(best=='-' || moves<parseInt(best)){ best=moves; localStorage.setItem('dp_puzzle_best',best); document.getElementById('best').innerText=best; }
   }
 }
 newGame();
